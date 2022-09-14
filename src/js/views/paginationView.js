@@ -7,7 +7,6 @@ class PaginationView extends View {
 
   _generateMarkup() {
     const totalPage = Math.ceil(this._data.results.length / this._data.perPage);
-    console.log(totalPage);
     // Gen for specific scenario
 
     // 1. First page .in more page

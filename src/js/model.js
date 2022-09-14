@@ -31,7 +31,6 @@ export const loadRecipe = async function (currentHash) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
-    console.log(state.recipe);
     // return state.recipe;
   } catch (error) {
     throw error;
@@ -68,4 +67,19 @@ export const getSearchResultPages = (_currentPage = 1) => {
   const end = _currentPage * 10;
 
   return state.search.results.slice(start, end);
+};
+
+// More like a Method-procedure
+export const updateServings = function (needServing) {
+  try {
+    state.recipe.ingredients.forEach(
+      ing =>
+        (ing.quantity = (ing.quantity / state.recipe.servings) * needServing)
+    );
+    // After click, now we have new .servings state
+    state.recipe.servings = needServing;
+    console.log(needServing);
+  } catch (error) {
+    throw new Error('This is message from model.js');
+  }
 };

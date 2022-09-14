@@ -7,6 +7,8 @@ import View from './View';
 
 class RecipeView extends View {
   _parentEle = document.querySelector('.recipe');
+  _currentServing = document.querySelector('.recipe__info-data--people');
+
   _errorMess = 'No recipes found for your query. Please try again!';
   _successMess = 'NICE';
 
@@ -16,6 +18,17 @@ class RecipeView extends View {
     ['hashchange', 'load'].forEach(currE =>
       window.addEventListener(`${currE}`, handler)
     );
+  }
+
+  addHandlerUpdateServings(handler) {
+    this._parentEle.addEventListener('click', function (e) {
+      const currClick = e.target.closest('.btn--update-servings');
+      if (!currClick) return;
+
+      let currentData = +currClick.dataset.updatenumber;
+      if (currentData === 0) return;
+      handler(currentData);
+    });
   }
 
   //   P.R.I.V.A.T.E
@@ -49,12 +62,16 @@ class RecipeView extends View {
         <span class="recipe__info-text">servings</span>
 
         <div class="recipe__info-buttons">
-          <button class="btn--tiny btn--increase-servings">
+          <button data-updateNumber=${
+            this._data.servings - 1
+          } class="btn--tiny btn--update-servings">
             <svg>
               <use href="${icons}#icon-minus-circle"></use>
             </svg>
           </button>
-          <button class="btn--tiny btn--increase-servings">
+          <button data-updateNumber=${
+            this._data.servings + 1
+          } class="btn--tiny btn--update-servings">
             <svg>
               <use href="${icons}#icon-plus-circle"></use>
             </svg>

@@ -63,6 +63,20 @@ const controlPagination = function (newCurrPage) {
     console.error(error + ' From Controller');
   }
 };
+
+// CURRENT
+//prettier-ignore
+const controlServings = function (newServings) {
+  try {
+    // STAGE # 1: Update new number Serving in state
+    model.updateServings(newServings);
+
+    // STAGE # 2: Re-render recipe
+    recipeView.render(model.state.recipe);
+  } catch (error) {
+    console.error(error + ' From Controller');
+  }
+};
 ////////////////////////////////////////////
 // Subscriber Event - LISTEN
 // const init = (function () {
@@ -72,6 +86,8 @@ const controlPagination = function (newCurrPage) {
 
 (function init() {
   recipeView.addHandlerRender(controlRecipe);
+  recipeView.addHandlerUpdateServings(controlServings);
+  // controlServings();
   searchView.addHandlerSearch(controlSearchResult);
   paginationView.addHandlerClick(controlPagination);
 })();

@@ -16,6 +16,8 @@ const controlRecipe = async function () {
     if (!currentHash) return;
     recipeView.renderSpinner();
 
+    resultView.update(model.getSearchResultPages());
+
     // STAGE # 1: Get Data API
     await model.loadRecipe(currentHash);
 
@@ -65,14 +67,13 @@ const controlPagination = function (newCurrPage) {
 };
 
 // CURRENT
-//prettier-ignore
 const controlServings = function (newServings) {
   try {
     // STAGE # 1: Update new number Serving in state
     model.updateServings(newServings);
 
     // STAGE # 2: Re-render recipe
-    recipeView.render(model.state.recipe);
+    recipeView.update(model.state.recipe);
   } catch (error) {
     console.error(error + ' From Controller');
   }
@@ -87,7 +88,7 @@ const controlServings = function (newServings) {
 (function init() {
   recipeView.addHandlerRender(controlRecipe);
   recipeView.addHandlerUpdateServings(controlServings);
-  // controlServings();
+
   searchView.addHandlerSearch(controlSearchResult);
   paginationView.addHandlerClick(controlPagination);
 })();

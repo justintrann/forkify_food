@@ -29,9 +29,50 @@ export default class View {
       return this.renderError();
 
     this._data = data;
-    console.log(this._data);
 
     const markup = this._generateMarkup();
+    this._clear();
+    this._parentEle.insertAdjacentHTML('afterbegin', markup);
+  }
+
+  update(data) {
+    this._data = data;
+
+    const markup = this._generateMarkup();
+    const virtualDOM = document.createRange().createContextualFragment(markup);
+    const virtualEle = virtualDOM.querySelectorAll('*');
+    const realEle = this._parentEle.querySelectorAll('*');
+    // console.log(virtualDOM);
+    const currRealDOM = Array.from(realEle);
+    const currFakeDOM = Array.from(virtualEle);
+
+    currFakeDOM.forEach((nodeFake, i) => {
+      const nodeReal = currRealDOM[i];
+
+      // Change textContent
+      if (
+        !nodeFake.isEqualNode(nodeReal) &&
+        nodeFake.firstChild?.nodeValue.trim() !== ''
+      ) {
+        nodeReal.textContent = nodeFake.textContent;
+
+        // console.log(nodeFake.firstChild?.nodeValue);
+      }
+
+      // Change dataset attr
+      if (!nodeFake.isEqualNode(nodeReal)) {
+        // DOM way (Only for recipeView.js)
+        // this._parentEle.querySelector(
+        //   '.btn--update-servings'
+        // ).dataset.updatenumber = this._data.servings;
+
+        // Advance way
+        Array.from(nodeFake.attributes).forEach(attr =>
+          nodeReal.setAttribute(attr.name, attr.value)
+        );
+      }
+    });
+
     this._clear();
     this._parentEle.insertAdjacentHTML('afterbegin', markup);
   }

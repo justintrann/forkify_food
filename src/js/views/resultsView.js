@@ -4,7 +4,6 @@ class ResultView extends View {
   _parentEle = document.querySelector('.results');
   _errorMess = 'No recipes found for your query. Please try again!';
   _successMess = 'NICE';
-  //   _data;
 
   _generateMarkup() {
     const resPreview = this._data
@@ -15,9 +14,12 @@ class ResultView extends View {
   }
 
   _generatePreviewMarkup(element) {
+    const currId = window.location.hash.slice(1);
     return `
     <li class="preview">
-            <a class="preview__link" href="#${element.id}">
+            <a class="preview__link ${
+              currId === element.id ? 'preview__link--active' : ''
+            }" href="#${element.id}">
               <figure class="preview__fig">
                 <img src="${element.image}" alt="Test" />
               </figure>

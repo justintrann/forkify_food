@@ -10,6 +10,7 @@ export const state = {
     currentPage: 1,
     perPage: RESULT_PER_PAGE,
   },
+  bookmarks: [],
 };
 
 // state -> recipe
@@ -31,7 +32,11 @@ export const loadRecipe = async function (currentHash) {
       cookingTime: recipe.cooking_time,
       ingredients: recipe.ingredients,
     };
-    // return state.recipe;
+
+    // Check bookmark avail ?
+    if (state.bookmarks.some(arrVal => state.recipe.id === arrVal.id))
+      state.recipe.bookmarked = true;
+    else state.recipe.bookmarked = false;
   } catch (error) {
     throw error;
   }
@@ -82,4 +87,21 @@ export const updateServings = function (needServing) {
   } catch (error) {
     throw new Error('This is message from model.js');
   }
+};
+
+export const addBookmark = function (currRecipe) {
+  state.bookmarks.push(currRecipe);
+
+  // Know this bookmarked
+  if (state.recipe.id === currRecipe.id) state.recipe.bookmarked = true;
+  else state.recipe.bookmarked = false;
+};
+
+export const removeBookmark = function (currRecipe) {
+  state.bookmarks = state.bookmarks.filter(
+    arrVal => arrVal.id !== currRecipe.id
+  );
+
+  // Know this bookmarked
+  if (state.recipe.id === currRecipe.id) state.recipe.bookmarked = false;
 };

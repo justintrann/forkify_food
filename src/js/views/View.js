@@ -37,7 +37,7 @@ export default class View {
 
   update(data) {
     this._data = data;
-
+    console.log(this._data);
     const markup = this._generateMarkup();
     const virtualDOM = document.createRange().createContextualFragment(markup);
     const virtualEle = virtualDOM.querySelectorAll('*');

@@ -66,13 +66,28 @@ const controlPagination = function (newCurrPage) {
   }
 };
 
-// CURRENT
+// CENTER - V
 const controlServings = function (newServings) {
   try {
     // STAGE # 1: Update new number Serving in state
     model.updateServings(newServings);
 
     // STAGE # 2: Re-render recipe
+    recipeView.update(model.state.recipe);
+  } catch (error) {
+    console.error(error + ' From Controller');
+  }
+};
+
+// CENTER AND LEFT - V
+const controlAddBookmark = function () {
+  try {
+    // STAGE # 1: push or pop Bookmark [] . We've add bookmarked to every recipe at model loadRecipe
+    if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
+    else model.removeBookmark(model.state.recipe);
+    console.log(model.state.recipe.bookmarked);
+
+    // STAGE # 2: Re-render recipe V
     recipeView.update(model.state.recipe);
   } catch (error) {
     console.error(error + ' From Controller');
@@ -88,6 +103,7 @@ const controlServings = function (newServings) {
 (function init() {
   recipeView.addHandlerRender(controlRecipe);
   recipeView.addHandlerUpdateServings(controlServings);
+  recipeView.addHandlerBookmark(controlAddBookmark);
 
   searchView.addHandlerSearch(controlSearchResult);
   paginationView.addHandlerClick(controlPagination);

@@ -7,6 +7,7 @@ import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
 import resultView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
+import bookmarkView from './views/bookmarkView.js';
 
 // CENTER - V
 const controlRecipe = async function () {
@@ -23,6 +24,8 @@ const controlRecipe = async function () {
 
     // STAGE # 2: Rendering Recipe API from #1
     recipeView.render(model.state.recipe);
+
+    bookmarkView.render(model.state.bookmarks);
   } catch (error) {
     recipeView.renderError();
   }
@@ -80,19 +83,20 @@ const controlServings = function (newServings) {
 };
 
 // CENTER AND LEFT - V
-const controlAddBookmark = function () {
+const controlToggleBookmark = function () {
   try {
     // STAGE # 1: push or pop Bookmark [] . We've add bookmarked to every recipe at model loadRecipe
     if (!model.state.recipe.bookmarked) model.addBookmark(model.state.recipe);
     else model.removeBookmark(model.state.recipe);
-    console.log(model.state.recipe.bookmarked);
 
     // STAGE # 2: Re-render recipe V
     recipeView.update(model.state.recipe);
+    bookmarkView.render(model.state.bookmarks);
   } catch (error) {
     console.error(error + ' From Controller');
   }
 };
+
 ////////////////////////////////////////////
 // Subscriber Event - LISTEN
 // const init = (function () {
@@ -103,7 +107,7 @@ const controlAddBookmark = function () {
 (function init() {
   recipeView.addHandlerRender(controlRecipe);
   recipeView.addHandlerUpdateServings(controlServings);
-  recipeView.addHandlerBookmark(controlAddBookmark);
+  recipeView.addHandlerBookmark(controlToggleBookmark);
 
   searchView.addHandlerSearch(controlSearchResult);
   paginationView.addHandlerClick(controlPagination);

@@ -24,13 +24,17 @@ export default class View {
     this._parentEle.insertAdjacentHTML('afterbegin', markup);
   }
 
-  render(data) {
+  render(data, renderBoolean = true) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();
 
     this._data = data;
 
     const markup = this._generateMarkup();
+
+    //Function render only return string html, not insert anything
+    if (!renderBoolean) return markup;
+
     this._clear();
     this._parentEle.insertAdjacentHTML('afterbegin', markup);
   }

@@ -93,8 +93,7 @@ export const addBookmark = function (currRecipe) {
   state.bookmarks.push(currRecipe);
 
   // Know this bookmarked
-  if (state.recipe.id === currRecipe.id) state.recipe.bookmarked = true;
-  else state.recipe.bookmarked = false;
+  state.recipe.bookmarked = true;
 };
 
 export const removeBookmark = function (currRecipe) {
@@ -103,5 +102,5 @@ export const removeBookmark = function (currRecipe) {
   );
 
   // Know this bookmarked
-  if (state.recipe.id === currRecipe.id) state.recipe.bookmarked = false;
+  state.recipe.bookmarked = false;
 };

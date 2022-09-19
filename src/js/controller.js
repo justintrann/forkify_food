@@ -8,6 +8,7 @@ import searchView from './views/searchView.js';
 import resultView from './views/resultsView.js';
 import paginationView from './views/paginationView.js';
 import bookmarkView from './views/bookmarkView.js';
+import newRecipeView from './views/newRecipeView.js';
 
 // CENTER - V
 const controlRecipe = async function () {
@@ -98,6 +99,10 @@ const controlToggleBookmark = function () {
   }
 };
 
+const controlNewRecipe = function (newRe) {
+  console.log(newRe);
+};
+
 ////////////////////////////////////////////
 // Subscriber Event - LISTEN
 // const init = (function () {
@@ -114,6 +119,8 @@ const controlToggleBookmark = function () {
   paginationView.addHandlerClick(controlPagination);
 
   bookmarkView.render(model.getBookmark());
+
+  newRecipeView.addHandlerUpload(controlNewRecipe);
 })();
 
 if (module.hot) module.hot.accept();

@@ -32,7 +32,7 @@ export default class View {
 
     const markup = this._generateMarkup();
 
-    //Function render only return string html, not insert anything
+    //This function render only return string html, not insert anything
     if (!renderBoolean) return markup;
 
     this._clear();
@@ -41,7 +41,7 @@ export default class View {
 
   update(data) {
     this._data = data;
-    console.log(this._data);
+
     const markup = this._generateMarkup();
     const virtualDOM = document.createRange().createContextualFragment(markup);
     const virtualEle = virtualDOM.querySelectorAll('*');

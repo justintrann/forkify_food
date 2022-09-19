@@ -25,9 +25,10 @@ const controlRecipe = async function () {
     // STAGE # 2: Rendering Recipe API from #1
     recipeView.render(model.state.recipe);
 
-    bookmarkView.render(model.state.bookmarks);
+    if (model.bookmarks) bookmarkView.update(model.getBookmark());
   } catch (error) {
     recipeView.renderError();
+    console.log(error);
   }
 };
 
@@ -111,6 +112,8 @@ const controlToggleBookmark = function () {
 
   searchView.addHandlerSearch(controlSearchResult);
   paginationView.addHandlerClick(controlPagination);
+
+  bookmarkView.render(model.getBookmark());
 })();
 
 if (module.hot) module.hot.accept();

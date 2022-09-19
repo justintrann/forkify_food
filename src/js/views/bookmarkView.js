@@ -6,6 +6,7 @@ class bookmarkView extends View {
   _errorMess = 'No bookmarks yet. Find a nice recipe and bookmark it :)';
   _successMess = 'NICE';
 
+  // Normally, render will 'insertAdjacent' . But here, thank to renderBoolean = false , it keeps return a string to JOIN('')
   _generateMarkup() {
     return this._data.map(val => previewView.render(val, false)).join('');
   }

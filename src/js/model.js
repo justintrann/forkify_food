@@ -89,11 +89,16 @@ export const updateServings = function (needServing) {
   }
 };
 
+const updateBookmark = function () {
+  localStorage.setItem('bookmarks', JSON.stringify(state.bookmarks));
+};
+
 export const addBookmark = function (currRecipe) {
   state.bookmarks.push(currRecipe);
 
   // Know this bookmarked
   state.recipe.bookmarked = true;
+  updateBookmark();
 };
 
 export const removeBookmark = function (currRecipe) {
@@ -103,4 +108,12 @@ export const removeBookmark = function (currRecipe) {
 
   // Know this bookmarked
   state.recipe.bookmarked = false;
+  updateBookmark();
 };
+
+export const getBookmark = () => JSON.parse(localStorage.getItem('bookmarks'));
+
+(function init() {
+  const storage = getBookmark();
+  if (storage) state.bookmarks = storage;
+})();

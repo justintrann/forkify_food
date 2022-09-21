@@ -26,7 +26,7 @@ const createRecipeObject = function (_data) {
     servings: recipe.servings,
     cookingTime: recipe.cooking_time,
     ingredients: recipe.ingredients,
-    // ...(recipe.key && { key: recipe.key }),
+    ...(recipe.key && { key: recipe.key }),
   };
 };
 
@@ -54,13 +54,14 @@ export const loadSearchRecipes = async function (query) {
 
     const recData = await AJAX(`${API_URL}?search=${query}&key=${API_KEY}`);
     const { recipes } = recData.data;
-
+    console.log(recData.data.recipes);
     state.search.results = recipes.map(reci => {
       return {
         id: reci.id,
         title: reci.title,
         publisher: reci.publisher,
         image: reci.image_url,
+        ...(reci.key && { key: reci.key }),
       };
     });
   } catch (error) {
@@ -128,7 +129,7 @@ export const uploadRecipe = async function (newRecipe) {
     const ingredients = Object.entries(newRecipe)
       .filter(ing => ing[0].startsWith('ingredient-') && ing[1] !== '')
       .map(ing => {
-        const ingArr = ing[1].replaceAll(' ', '').split(',');
+        const ingArr = ing[1].split(',').map(val => val.trim());
         // Initial to make sure our ingArr input got 3 elements
         if (ingArr.length !== 3) throw new Error('Wrong our format');
         //FLAG: Thinking of case when we only need to put first number

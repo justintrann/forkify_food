@@ -17,10 +17,8 @@ const controlRecipe = async function () {
   try {
     // STAGE # 0: Initial
     let currentHash = window.location.hash.slice(1);
-    console.log(currentHash);
     if (!currentHash) return;
     recipeView.renderSpinner();
-
     resultView.update(model.getSearchResultPages());
 
     // STAGE # 1: Get Data API
@@ -29,7 +27,7 @@ const controlRecipe = async function () {
     // STAGE # 2: Rendering Recipe API from #1
     recipeView.render(model.state.recipe);
 
-    // if (model.bookmarks) bookmarkView.update(model.getBookmark());
+    if (model.bookmarks) bookmarkView.update(model.getBookmark());
   } catch (error) {
     recipeView.renderError();
     console.log(error);

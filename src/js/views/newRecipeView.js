@@ -36,14 +36,9 @@ class newRecipeView extends View {
     }
   }
 
-  reGenerateMarkup() {}
   _addHandlerShowModal() {
     [this._btnOpen, this._btnClose, this._overlay].forEach(btn =>
-      btn.addEventListener(
-        'click',
-        // this.reGenerateMarkup.bind(this);
-        this.toggleRecipeForm.bind(this)
-      )
+      btn.addEventListener('click', this.toggleRecipeForm.bind(this))
     );
   }
 
@@ -100,8 +95,6 @@ class newRecipeView extends View {
     </form>
     `;
   }
-
-  _generateMarkup() {}
 }
 
 export default new newRecipeView();

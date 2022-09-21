@@ -1,5 +1,5 @@
 import { API_URL, RESULT_PER_PAGE, API_KEY } from './config.js';
-import { getJSON, sendJSON } from './helper.js';
+import { AJAX } from './helper.js';
 
 // Everydata must to go to STATE . All func is created to serve this STATE
 export const state = {
@@ -26,18 +26,17 @@ const createRecipeObject = function (_data) {
     servings: recipe.servings,
     cookingTime: recipe.cooking_time,
     ingredients: recipe.ingredients,
-    ...(recipe.key && { key: recipe.key }),
+    // ...(recipe.key && { key: recipe.key }),
   };
 };
 
 // state -> recipe
 export const loadRecipe = async function (currentHash) {
   try {
-    const recData = await getJSON(`${API_URL}/${currentHash}`);
-    // console.log(recData);
+    const recData = await AJAX(`${API_URL}/${currentHash}?key=${API_KEY}`);
 
     // Throw recipe above into state.recipe
-    createRecipeObject(recData);
+    state.recipe = createRecipeObject(recData);
 
     // Check bookmark avail ?
     if (state.bookmarks.some(arrVal => state.recipe.id === arrVal.id))
@@ -53,7 +52,7 @@ export const loadSearchRecipes = async function (query) {
   try {
     state.search.query = query;
 
-    const recData = await getJSON(`${API_URL}/${query}`);
+    const recData = await AJAX(`${API_URL}?search=${query}&key=${API_KEY}`);
     const { recipes } = recData.data;
 
     state.search.results = recipes.map(reci => {
@@ -155,7 +154,10 @@ export const uploadRecipe = async function (newRecipe) {
     };
 
     // console.log(recipe);
-    const data = await sendJSON(`${API_URL}?key=${API_KEY}`, recipe);
+    const data = await AJAX(
+      `${API_URL}?search=${recipe.title}&key=${API_KEY}`,
+      recipe
+    );
     console.log(data);
     state.recipe = createRecipeObject(data);
     addBookmark(state.recipe);

@@ -17,6 +17,7 @@ const controlRecipe = async function () {
   try {
     // STAGE # 0: Initial
     let currentHash = window.location.hash.slice(1);
+    console.log(currentHash);
     if (!currentHash) return;
     recipeView.renderSpinner();
 
@@ -28,7 +29,7 @@ const controlRecipe = async function () {
     // STAGE # 2: Rendering Recipe API from #1
     recipeView.render(model.state.recipe);
 
-    if (model.bookmarks) bookmarkView.update(model.getBookmark());
+    // if (model.bookmarks) bookmarkView.update(model.getBookmark());
   } catch (error) {
     recipeView.renderError();
     console.log(error);
@@ -46,7 +47,7 @@ const controlSearchResult = async function () {
     if (!query) return;
 
     // STAGE # 2: Load data from model + clear input field
-    await model.loadSearchRecipes(`?search=${query}`);
+    await model.loadSearchRecipes(query);
 
     // STAGE # 3: Render list (On the left)
     // resultView.render(model.state.search.results);
@@ -108,9 +109,13 @@ const controlNewRecipe = async function (newRe) {
     // Get data
     await model.uploadRecipe(newRe);
 
-    // Render data & success message
+    // Render data & success message & bookmarkTab
     recipeView.render(model.state.recipe);
     newRecipeView.renderSuccess();
+    bookmarkView.render(model.state.bookmarks);
+
+    // Change ID to current newRe
+    window.history.pushState(null, '', `#${model.state.recipe.id}`);
 
     // Close form
     setTimeout(function () {

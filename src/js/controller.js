@@ -2,6 +2,8 @@ import 'core-js/stable';
 import { async } from 'regenerator-runtime';
 import 'regenerator-runtime/runtime';
 
+import { MODAL_CLOSE_SEC } from './config.js';
+
 import * as model from './model.js';
 import recipeView from './views/recipeView.js';
 import searchView from './views/searchView.js';
@@ -99,8 +101,25 @@ const controlToggleBookmark = function () {
   }
 };
 
-const controlNewRecipe = function (newRe) {
-  console.log(newRe);
+// CENTER - V
+const controlNewRecipe = async function (newRe) {
+  try {
+    newRecipeView.renderSpinner();
+    // Get data
+    await model.uploadRecipe(newRe);
+
+    // Render data & success message
+    recipeView.render(model.state.recipe);
+    newRecipeView.renderSuccess();
+
+    // Close form
+    setTimeout(function () {
+      newRecipeView.toggleRecipeForm();
+    }, MODAL_CLOSE_SEC * 1000);
+  } catch (error) {
+    // console.error(error + 'From Controller');
+    newRecipeView.renderError(error.message);
+  }
 };
 
 ////////////////////////////////////////////

@@ -30,9 +30,8 @@ export default class View {
 
     this._data = data;
 
-    const markup = this._generateMarkup();
-
     //This function render only return string html, not insert anything
+    const markup = this._generateMarkup();
     if (!renderBoolean) return markup;
 
     this._clear();

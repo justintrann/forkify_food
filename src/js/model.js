@@ -1,5 +1,5 @@
-import { API_URL, RESULT_PER_PAGE } from './config.js';
-import { getJSON } from './helper.js';
+import { API_URL, RESULT_PER_PAGE, API_KEY } from './config.js';
+import { getJSON, sendJSON } from './helper.js';
 
 // Everydata must to go to STATE . All func is created to serve this STATE
 export const state = {
@@ -13,25 +13,31 @@ export const state = {
   bookmarks: [],
 };
 
+// Correct format with new Recipe
+const createRecipeObject = function (_data) {
+  const { recipe } = _data.data;
+
+  return {
+    id: recipe.id,
+    title: recipe.title,
+    publisher: recipe.publisher,
+    sourceUrl: recipe.source_url,
+    image: recipe.image_url,
+    servings: recipe.servings,
+    cookingTime: recipe.cooking_time,
+    ingredients: recipe.ingredients,
+    ...(recipe.key && { key: recipe.key }),
+  };
+};
+
 // state -> recipe
 export const loadRecipe = async function (currentHash) {
   try {
-    const recData = await getJSON(`${API_URL}${currentHash}`);
+    const recData = await getJSON(`${API_URL}/${currentHash}`);
     // console.log(recData);
 
-    const { recipe } = recData.data;
-
     // Throw recipe above into state.recipe
-    state.recipe = {
-      id: recipe.id,
-      title: recipe.title,
-      publisher: recipe.publisher,
-      sourceUrl: recipe.source_url,
-      image: recipe.image_url,
-      servings: recipe.servings,
-      cookingTime: recipe.cooking_time,
-      ingredients: recipe.ingredients,
-    };
+    createRecipeObject(recData);
 
     // Check bookmark avail ?
     if (state.bookmarks.some(arrVal => state.recipe.id === arrVal.id))
@@ -47,7 +53,7 @@ export const loadSearchRecipes = async function (query) {
   try {
     state.search.query = query;
 
-    const recData = await getJSON(`${API_URL}${query}`);
+    const recData = await getJSON(`${API_URL}/${query}`);
     const { recipes } = recData.data;
 
     state.search.results = recipes.map(reci => {
@@ -117,3 +123,43 @@ export const getBookmark = () => JSON.parse(localStorage.getItem('bookmarks'));
   const storage = getBookmark();
   if (storage) state.bookmarks = storage;
 })();
+
+export const uploadRecipe = async function (newRecipe) {
+  try {
+    const ingredients = Object.entries(newRecipe)
+      .filter(ing => ing[0].startsWith('ingredient-') && ing[1] !== '')
+      .map(ing => {
+        const ingArr = ing[1].replaceAll(' ', '').split(',');
+        // Initial to make sure our ingArr input got 3 elements
+        if (ingArr.length !== 3) throw new Error('Wrong our format');
+        //FLAG: Thinking of case when we only need to put first number
+        // => Initial data for all field
+        const [quantity, unit, description] = ingArr;
+        console.log(ingArr);
+        return {
+          quantity: quantity ? +quantity : null,
+          unit: unit ? unit : '',
+          description: description ? description : '',
+        };
+      });
+
+    // Ready for uploading to server
+    const recipe = {
+      title: newRecipe.title,
+      publisher: newRecipe.publisher,
+      source_url: newRecipe.sourceUrl,
+      image_url: newRecipe.image,
+      servings: +newRecipe.servings,
+      cooking_time: +newRecipe.cookingTime,
+      ingredients,
+    };
+
+    // console.log(recipe);
+    const data = await sendJSON(`${API_URL}?key=${API_KEY}`, recipe);
+    console.log(data);
+    state.recipe = createRecipeObject(data);
+    addBookmark(state.recipe);
+  } catch (error) {
+    throw error;
+  }
+};

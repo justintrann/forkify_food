@@ -26,11 +26,11 @@ const controlRecipe = async function () {
 
     // STAGE # 2: Rendering Recipe API from #1
     recipeView.render(model.state.recipe);
-
-    if (model.bookmarks) bookmarkView.update(model.getBookmark());
+    // console.log(model.state.bookmarks);
+    if (model.state.bookmarks.length > 0)
+      bookmarkView.update(model.getBookmark());
   } catch (error) {
     recipeView.renderError();
-    console.log(error);
   }
 };
 

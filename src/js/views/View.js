@@ -24,6 +24,15 @@ export default class View {
     this._parentEle.insertAdjacentHTML('afterbegin', markup);
   }
 
+  /**
+   * Render data to DOM
+   * _data comes from model.js, thank to controller.js (without it, view.js wont know where data coming)
+   * @param {Object | Object[]} data The data to be rendered
+   * @param {boolean} [renderBoolean = true] if true only return markup TEXT
+   * @returns {undefined | string} A string when renderBoolean = false
+   * @this {Object} View instance
+   */
+
   render(data, renderBoolean = true) {
     if (!data || (Array.isArray(data) && data.length === 0))
       return this.renderError();

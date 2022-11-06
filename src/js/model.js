@@ -89,7 +89,6 @@ export const updateServings = function (needServing) {
     );
     // After click, now we have new .servings state
     state.recipe.servings = needServing;
-    console.log(needServing);
   } catch (error) {
     throw new Error('This is message from model.js');
   }
